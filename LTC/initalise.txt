@@ -1,0 +1,32 @@
+def initialise(): 
+   option = int(input('Choose range as months (1) or days (0)?'))
+    if option == 1:
+        monthrange_l = int(input('Start month (numerical): '))
+        monthrange_u = int(input('End month (numerical): '))
+        yearrange_l = int(input('Start year (from 2015 = 1) (numerical): '))
+        yearrange_u = int(input('End year (from 2015 = 1) (numerical): '))
+        dayrange_l = int(input('Start day date:'))
+        dayrange_u = int(input('End day date:'))
+    elif option == 0:
+        yearrange_l = int(input('Start year (from 2015 = 1) (numerical): '))
+        yearrange_u = int(input('End year (from 2015 = 1) (numerical): '))
+        monthrange_u = int(input('Month (numerical): '))
+        monthrange_l=monthrange_u
+        dayrange_l = int(input('Start day date:'))
+        dayrange_u = int(input('End day date:'))
+    elif option == 2:
+        yearrange_l = 1
+        yearrange_u = 2
+        monthrange_l = 1
+        monthrange_u = 12
+        dayrange_l = 1
+        dayrange_u = 31
+    if len(str(monthrange_u)):
+        monthrange_u="0"+str(monthrange_u)
+    if len(str(monthrange_l)):
+        monthrange_l="0"+str(monthrange_l)
+    if len(str(dayrange_u)):
+        dayrange_u="0"+str(dayrange_u)
+    if len(str(dayrange_l)):
+        dayrange_l="0"+str(dayrange_l)
+    return dayrange_l,dayrange_u,monthrange_l,monthrange_u,yearrange_l,yearrange_u
