@@ -89,8 +89,8 @@ for i in range(int(yearCount),17): #range should be 0,17
             if link.get('href') and (link.get('href')[:6] == 'visual'):
                 try:
                     fullLink = link.get('href')
-                    name = fullLink.split('/')[2].split('_')[0]
-                    date = fullLink.split('/')[2].split('_')[1].split('rmob.txt')[0]
+                    name = fullLink.split('/')[2][:-15]
+                    date = fullLink.split('/')[2][-14:][:6]
                     month = date[:2]
                     year = date[2:]
                     dateString = year+'-'+month
@@ -128,7 +128,7 @@ for i in range(int(yearCount),17): #range should be 0,17
             entryCount += 1
             authors[name].add(date,newEntry)
 
-        print('Current list of all authors: ',allauthors)
+        print('Current list of new authors: ',allauthors)
         for name, authorobj in authors.items():
             #print(name, authorobj)
             save_object(authorobj,  str('/home/cwp/EMC/data/authors/'+name+'.pkl'))
