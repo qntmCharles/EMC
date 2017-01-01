@@ -69,7 +69,7 @@ class Author:
                 if key not in self.setupAttr.keys():
                     self.setupAttr[key] = value
                     print('Added attribute '+key+': '+value)
-            if key == 'Observer' or 'OBSERVER':
+            if key in ['Observer', 'OBSERVER']:
                 if value not in self.name:
                     self.name.append(value)
 
@@ -88,14 +88,3 @@ class Author:
 
         else:
             print('Error: unknown attribute type')
-
-    def merge(self, otherAuthor):
-        for name in otherAuthor.name:
-            if name not in self.name:
-                self.name.append(name)
-
-        self.addAttr(otherAuthor.locationAttr)
-        self.addAttr(otherAuthor.setupAttr)
-        self.data = self.data.copy()
-        self.data.update(otherAuthor.data)
-        #May want to check this works before going ahead

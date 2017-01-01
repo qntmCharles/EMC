@@ -75,7 +75,7 @@ def findAttributes(text, attributesDict):
         text = text.split(']')
         ident = text[0][1:]
         text = text[1].split('\r')[0]
-        if ident in ['Observer', 'Country', 'City', 'Longitude', 'Latitude', 'LongitudeGMAP', 'LatitudeGMAP', 'Frequencies', 'Antenna', 'AzimutAntenna', 'ElevationAntenna', 'Pre-Amplifier', 'Receiver', 'ObservingMethod', 'Remarks', 'SoftFTP', 'Computer', 'Location', 'Azimuth', 'Elevation', 'Pre-amplifier', 'Observingmethod', 'REMARK', 'OBSERVER', 'COUNTRY', 'LATITUDE', 'LONGITUDE', 'CITY', 'FREQUENCY', 'ANTENNA', 'AZIMUTANTENNA', 'ELEVATIONANTENNA', 'REMARKS', 'PRE-AMPLIFIER', 'RECEIVER', 'OBSERVINGMETHOD', 'LATITUDE+/-', 'LATITUDEDeg', 'WEB']:
+        if ident in ['Observer', 'Country', 'City', 'Longitude', 'Latitude', 'LongitudeGMAP', 'LatitudeGMAP', 'Frequencies', 'Antenna', 'AzimutAntenna', 'ElevationAntenna', 'Pre-Amplifier', 'Receiver', 'ObservingMethod', 'Remarks', 'SoftFTP', 'Computer', 'Location', 'Azimuth', 'Elevation', 'Pre-amplifier', 'Observingmethod', 'REMARK', 'OBSERVER', 'COUNTRY', 'LATITUDE', 'LONGITUDE', 'CITY', 'FREQUENCY', 'ANTENNA', 'AZIMUTANTENNA', 'ELEVATIONANTENNA', 'REMARKS', 'PRE-AMPLIFIER', 'RECEIVER', 'OBSERVINGMETHOD', 'LATITUDE+/-', 'LATITUDEDeg', 'LONGITUDE+/-', 'WEB']:
             attributesDict[ident] = text
         elif ident in ['E', '']:
             pass
@@ -87,7 +87,6 @@ def findAttributes(text, attributesDict):
     except:
         if text not in [[''], [-1]]:
             print('Error: ',text)
-
 
     return attributesDict
 

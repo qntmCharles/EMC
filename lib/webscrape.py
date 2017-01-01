@@ -115,6 +115,9 @@ for i in range(int(yearCount),17): #range should be 0,17
             #Prevent the internet from thinking it's hax0rs
             time.sleep(2)
 
+            if name == '':
+                continue
+
             if name not in authors:
                 print('Found new author: ',name)
                 authorCount += 1
@@ -133,8 +136,8 @@ for i in range(int(yearCount),17): #range should be 0,17
             #print(name, authorobj)
             save_object(authorobj,  str('/home/cwp/EMC/data/authors/'+name+'.pkl'))
 
-        with open('/home/cwp/EMC/lib/authors.txt', 'w+') as f:
-            listOfAuthors = f.readlines()
+        with open('/home/cwp/EMC/lib/authors.txt', 'a+') as f:
+            listOfAuthors = f.read().splitlines()
             for author in allauthors:
                 if author not in listOfAuthors:
                     f.write(author+'\n')
