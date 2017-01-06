@@ -1,1 +1,7 @@
-Bar chart for volume of data (plot on same chart as distinct locations)
+Bar chart for volume of data for each location rather than just number of observers
+
+Diurnal shift:
+	- Get diurnal shift to show who is being shown & where they are & setup attr
+	- Normalize the diurnal shift then plot EVERYTHING - anything distinct?
+
+-Try to plot all data for each person - one of them has an error I do believe

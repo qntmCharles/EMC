@@ -5,7 +5,7 @@ from difflib import SequenceMatcher
 from matplotlib import pyplot as plt
 #from classes import Author#,Entry
 
-def analyseAuthor(authorobj):
+def analyseAuthor(authorobj, verbose):
     totalHourCount = 0
     totalDayCount = 0
     print('Author: ',authorobj.username)
@@ -14,17 +14,19 @@ def analyseAuthor(authorobj):
         entry.loadData()
         dayCount, daysList = entry.calculateActiveDays()
         daysList.sort()
-        #print('Date: '+date)
-        #print('Active on '+str(dayCount)+' days: '+', '.join(daysList))
+        if verbose:
+            print('Date: '+date)
+            print('Active on '+str(dayCount)+' days: '+', '.join(daysList))
         #For each active day, check active hours
         for num in daysList:
             hourCount, hoursList = entry.calculateActiveHours(num)
-            #if hourCount != 0:
-                #print('     On day '+str(num)+' there were '+str(hourCount)+' active hours: '+', '.join([str(x) for x in hoursList]))
+            if verbose and (hourCount != 0):
+                print('     On day '+str(num)+' there were '+str(hourCount)+\
+                        ' active hours: '+', '.join([str(x) for \
+                        x in hoursList]))
             totalHourCount += hourCount
         totalDayCount += dayCount
 
-        #Wait to continue
     return totalDayCount, totalHourCount
 
 authors={}
