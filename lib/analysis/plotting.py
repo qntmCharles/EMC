@@ -71,12 +71,13 @@ def plotMonthWithSameDay(entry):
         dateString = entry.date+'-'+'{0:02d}'.format(int(day))
         data = entry.data[day]
         for i in range(len(data)):
+            maxData = max(data)
             #if int(data[i]) >= 0:
                 if i < 23:
                     fullTime = '2000-01-01'+':{0:02d}'.format(i+1)
                     dateObject = datetime.strptime(fullTime, '%Y-%m-%d:%H')
                     times.append(dateObject)
-                    finalData.append(data[i])
+                    finalData.append(data[i]/max)
                 else:
                     fullTime = '2000-01-01:23'
                     dateObject = datetime.strptime(fullTime, '%Y-%m-%d:%H')
@@ -94,7 +95,3 @@ for name, observer in authors.items():
         entry = observer.data[date]
         plotMonthWithSameDay(entry)
         plt.show()
-
-        end = raw_input('End? ')
-        if end:
-            sys.exit()
