@@ -78,6 +78,7 @@ def getAttr(attr, authorobj, attrType):
         return 'Unknown'
 
 hist = {}
+counts = {}
 
 for name,authorobj in authors.items():
     result = getAttr('Country', authorobj, 'Location')
@@ -106,9 +107,9 @@ for name,authorobj in authors.items():
         result = 'Spain'
 
     if result not in hist.keys():
-        hist[result] = 1
+        hist[result] = len(authorobj.data.values())
     else:
-        hist[result] += 1
+        hist[result] += len(authorobj.data.values())
 
 histList = []
 for key, value in hist.items():
@@ -133,7 +134,7 @@ ax.set_xticks(indices+width)
 ax.set_xticklabels(countriesOrdered, rotation = 45, ha='right')
 fig.suptitle('Locations of observers (where known)', fontsize = 15, fontweight = 'bold')
 ax.set_xlabel('Country', fontsize = 15)
-ax.set_ylabel('Number of observers', fontsize = 15)
+ax.set_ylabel('Total number of entries', fontsize = 15)
 
 plt.tight_layout()
 

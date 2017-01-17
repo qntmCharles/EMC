@@ -1,3 +1,4 @@
+from __future__ import division
 import cPickle as pickle
 import numpy as np
 import os, csv
@@ -78,6 +79,7 @@ def getAttr(attr, authorobj, attrType):
         return 'Unknown'
 
 hist = {}
+counts = {}
 
 for name,authorobj in authors.items():
     result = getAttr('Country', authorobj, 'Location')
@@ -106,24 +108,28 @@ for name,authorobj in authors.items():
         result = 'Spain'
 
     if result not in hist.keys():
-        hist[result] = 1
+        hist[result] = len(authorobj.data.values())
+        counts[result] = 1
     else:
-        hist[result] += 1
+        hist[result] += len(authorobj.data.values())
+        counts[result] += 1
 
-histList = []
+histList = {}
 for key, value in hist.items():
-    histList.append((key,value))
+    histList[key] = value/counts[key]
 
 countriesOrdered = []
 countsOrdered = []
-for x in sorted(histList, key=lambda tup: tup[1]):
-    countriesOrdered.append(x[0])
-    countsOrdered.append(x[1])
 
-countriesOrdered.reverse()
-countsOrdered.reverse()
-print(countriesOrdered)
-print(countsOrdered)
+countriesOrdered = sorted(histList, key=histList.get, reverse=True)
+
+for country in countriesOrdered:
+    countsOrdered.append(histList[country])
+
+#countriesOrdered.reverse()
+#countsOrdered.reverse()
+print(len(countriesOrdered))
+print(len(countsOrdered))
 
 indices = np.arange(len(countriesOrdered))
 width = 0.6
@@ -133,7 +139,7 @@ ax.set_xticks(indices+width)
 ax.set_xticklabels(countriesOrdered, rotation = 45, ha='right')
 fig.suptitle('Locations of observers (where known)', fontsize = 15, fontweight = 'bold')
 ax.set_xlabel('Country', fontsize = 15)
-ax.set_ylabel('Number of observers', fontsize = 15)
+ax.set_ylabel('Average number of entries per observer', fontsize = 15)
 
 plt.tight_layout()
 
