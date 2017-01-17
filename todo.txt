@@ -1,7 +1,7 @@
-Bar chart for volume of data for each location rather than just number of observers
+-running means for full data plots?
 
-Diurnal shift:
-	- Get diurnal shift to show who is being shown & where they are & setup attr
-	- Normalize the diurnal shift then plot EVERYTHING - anything distinct?
+-Try to plot all data for each person - one of them has an error I do believe (doing that now I believe)
 
--Try to plot all data for each person - one of them has an error I do believe
+-Go through errors when plotting all entries and fix the problems
+
+-Why are the number of directories in each of the plot dirs not the same?
