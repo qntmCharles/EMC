@@ -48,11 +48,9 @@ plt.subplots_adjust(top=0.93,bottom=0.12)
 plt.xlim((0,24))
 np.append(plotTimes, 24)
 plotTimes = np.append(plotTimes, 24)
-print(plotTimes)
 plotData = np.insert(plotData, 0, plotData[-1])
 maxs = np.insert(maxs, 0, maxs[-1])
 #mins = np.insert(mins, 0, mins[-1])
-print(plotData)
 plt.errorbar(plotTimes, plotData, yerr=[maxs, maxs], label="Original data")
 #plt.plot(plotTimes, plotData, label="Original data")
 
@@ -67,21 +65,17 @@ est_std,est_phase,est_mean = leastsq(optimize_func, [guess_std,guess_phase,guess
 
 data_fit = est_std*np.sin(plotTimes*2*pi/24+est_phase)+est_mean
 
-coeff = np.polyfit(plotTimes, plotData*2*pi/24, 3)
-#f = np.poly1d(coeff)
-#poly_fit = f(plotTimes)
-
 def func(x, a, b, c, d):
-    return (a*x**3) + (b*x**2) + (c*x) + d
+    return (a*x**3)+(b*x**2)+(c*x)+d
 
 params = scipy.optimize.curve_fit(func, plotTimes, plotData)[0]
 
 poly_fit = [(params[0]*x**3)+(params[1]*x**2)+(params[2]*x)+params[3] for x in plotTimes]
 
 print(est_std, est_phase, est_mean)
-#plt.plot(plotTimes, data_fit, 'r', label="Fitted sine curve")
+plt.plot(plotTimes, data_fit, 'r', label="Fitted sine curve")
 #plt.plot(plotTimes, yy, 'k')
-#plt.plot(plotTimes, poly_fit, 'g', label="Fitted cubic")
-#plt.legend()
+plt.plot(plotTimes, poly_fit, 'g', label="Fitted cubic")
+plt.legend()
 plt.savefig('/home/cwp/EMC/plots/general/diurnal_shift_fit.png')
 plt.show()
