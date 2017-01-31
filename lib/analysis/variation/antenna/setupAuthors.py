@@ -156,45 +156,100 @@ def dd2dms(dd,latlong):
 
     return ''.join([EorW,'{0:03d}'.format(int(deg)),'d','{0:02d}'.format(int(mins)),"\'",'{0:02d}'.format(int(secs))])
 
-def loadObservers(filename, allObserversDict):
-    observers = []
-    with open('/home/cwp/EMC/lib/analysis/variation/antenna/'+filename+\
-            '.txt', 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            observers.append(line.split('\n')[0])
-            allObserversDict[line.split('\n')[0]] = filename
+sortedObservers = []
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/yagi.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
 
-    return observers
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/dipole.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
 
-allObservers = {}
-yagi = loadObservers('yagi', allObservers)
-dipole = loadObservers('dipole', allObservers)
-vertical = loadObservers('vertical', allObservers)
-gp = loadObservers('gp', allObservers)
-discone = loadObservers('discone', allObservers)
-turnstile = loadObservers('turnstile', allObservers)
-jpole = loadObservers('jpole', allObservers)
-logper = loadObservers('logperiodic', allObservers)
-diamond = loadObservers('diamond', allObservers)
-quad = loadObservers('quad', allObservers)
-omni = loadObservers('omni', allObservers)
-fwl = loadObservers('fullwaveloop', allObservers)
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/vertical.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
 
-with open('/home/cwp/EMC/lib/analysis/variation/antenna/data.csv','a') as f:
-    writer = csv.writer(f, delimiter='\t')
-    writer.writerow(['ANTENNA','PEAK', 'MEAN', 'MAX', 'MIN', 'ERR', 'FIT', 'SKEW'])
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/gp.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/discone.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/turnstile.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/jpole.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/logperiodic.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/diamond.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/misc.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/quad.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/omni.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/antenna/fullwaveloop.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        sortedObservers.append(line.split('\n')[0])
 
 for name, observer in authors.items():
-    if name in allObservers.keys():
-        print(name, allObservers[name])
-        print(observer.setupAttr["Antenna"])
-        results = list(analyse(observer.data))
-        print('Results: ',results)
+    if name not in sortedObservers:
+        attr = ["Antenna", "ANTENNA", "OBSERVINGMETHOD", "FREQUENCY", "Frequencies", "ObservingMethod"]
+        flag = False
+        for attribute in attr:
+            if attribute in observer.setupAttr.keys():
+                flag = True
 
-        toWrite = [allObservers[name]]
-        toWrite.extend(results)
+        if flag == True:
+            print('Observer: '+name)
+            for attribute in attr:
+                if attribute in observer.setupAttr.keys():
+                    print(attribute, observer.setupAttr[attribute])
 
-        with open('/home/cwp/EMC/lib/analysis/variation/antenna/data.csv','a') as f:
-            writer = csv.writer(f, delimiter='\t')
-            writer.writerow(toWrite)
+            choice = raw_input('Add to list of miscs?')
+            if choice == '1':
+                with open('/home/cwp/EMC/lib/analysis/variation/antenna/misc.txt','a') as f:
+                    f.write(name)
+                    f.write('\n')
+
+            #results=list(analyse(observer.data))
+            #print('Results: ',results)
+            #toWrite = [lat, long]
+            #toWrite.extend(results)
+
+
+        """
+            with open('/home/cwp/EMC/lib/analysis/variation/data.csv','a') as f:
+                writer = csv.writer(f, delimiter='\t')
+                writer.writerow(toWrite)
+            """
