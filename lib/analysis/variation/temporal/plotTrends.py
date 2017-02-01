@@ -84,12 +84,12 @@ def analyse(entriesList):
 
     return peak, meanCount, maxCount, minCount, error, fit, skew
 
-with open('/home/cwp/EMC/lib/analysis/plotData.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAplotData.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         datas[i] = datas[i][:-1]
 
-with open('/home/cwp/EMC/lib/analysis/plotTimes.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAplotTimes.txt', 'r') as f:
     times = f.readlines()
     for i in range(len(times)):
         times[i] = times[i][:-1]
@@ -97,23 +97,29 @@ with open('/home/cwp/EMC/lib/analysis/plotTimes.txt', 'r') as f:
 plotTimes = []
 plotData = []
 plotErr = []
-for year in range(2000,2017):
-    currentData = []
 
-    for i in range(len(datas)):
-        currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
-        if currentDate.year == year:
-            if (currentDate.hour < 18) and (currentDate.hour>6):
+for year in range(2000,2017):
+    print(year)
+    for month in range(1,13):
+        print(month)
+        currentData = []
+
+        for i in range(len(datas)):
+            currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
+            if (currentDate.year == year) and (currentDate.month == month):
                 currentData.extend([int(x) for x in datas[i].split(',')])
 
-    plotTimes.append(year)
-    plotData.append(statistics.mean(currentData))
-    plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
+        if len(currentData) != 0:
+            plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
+            plotData.append(statistics.mean(currentData))
+            if len(currentData) > 1:
+                plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
+            else:
+                plotErr.append(1)
 
-plt.title('Detection count trend by year')
+plt.title('Detection count trend by year & month')
 plt.xlabel('Year', fontsize=20)
 plt.ylabel('Mean detection count', fontsize=20)
 plt.errorbar(plotTimes, plotData, yerr= plotErr)
-plt.xlim(2000.5,2016.5)
-plt.savefig('/home/cwp/EMC/plots/variation/temporal/yearday.png',dpi=500)
+#plt.savefig('/home/cwp/EMC/plots/variation/temporal/yearday.png',dpi=500)
 plt.show()

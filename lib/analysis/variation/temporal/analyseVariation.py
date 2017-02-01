@@ -13,32 +13,27 @@ import scipy.stats as stats
 import pandas
 from classes import Entry
 
-def analyse(entriesList):
+def analyse(date, entry):
     shiftTimes = range(0, 24)
     shiftData = [[] for x in range(0, 24)]
     shiftMeans = []
     allData = []
-    for date, entry in entriesList.items():
-        entry.loadData()
-        for day, dayData in entry.data.items():
-            for i in range(len(dayData)):
-                if dayData[i] not in ['-1', '0', '\r']:
-                    allData.append(int(dayData[i]))
-                    try:
-                        if i < 23:
-                            time = datetime.strptime(date+'-'+day+':'+\
-                                    '{0:02d}'.format(i+1),"%Y-%m-%d:%H")
-                        else:
-                            time = datetime.strptime(date+'-'+day+':'+\
-                                    str(23),"%Y-%m-%d:%H")
-                            time += dt.timedelta(hours=1)
+    for day, dayData in entry.items():
+        day = '{0:02d}'.format(day)
+        for i in range(len(dayData)):
+            if dayData[i] not in ['-1', '0', '\r']:
+                allData.append(int(dayData[i]))
+                if i < 23:
+                    time = datetime.strptime(date+'-'+day+':'+\
+                            '{0:02d}'.format(i),"%Y-%m-%d:%H")
+                else:
+                    time = datetime.strptime(date+'-'+day+':'+\
+                            str(23),"%Y-%m-%d:%H")
 
-                        if time.hour in shiftTimes:
-                            shiftData[time.hour].extend([int(dayData[i])])
-                        else:
-                            print('bork')
-                    except:
-                        pass
+                if time.hour in shiftTimes:
+                    shiftData[time.hour].extend([int(dayData[i])])
+                else:
+                    print('bork')
 
     meanCount = statistics.mean(allData)
     maxCount = max(allData)
@@ -55,8 +50,10 @@ def analyse(entriesList):
         except:
             shiftMeans.append(0)
 
-    shiftMeans = np.insert(shiftMeans, len(shiftMeans), shiftMeans[-1])
-    shiftTimes = np.insert(shiftTimes, len(shiftTimes), shiftTimes[-1])
+    shiftMeans.append(shiftMeans[0])
+    shiftTimes.append(24)
+    shiftMeans = np.array(shiftMeans)
+    shiftTimes = np.array(shiftTimes)
 
     skew = stats.skew(pandas.DataFrame(shiftMeans))[0]
 
@@ -98,12 +95,33 @@ with open('/home/cwp/EMC/lib/analysis/plotTimes.txt', 'r') as f:
 currentData = {}
 currentYear = 2000
 currentMonth = 1
-currentDate = 1
+currentDay = 1
+plotData = []
+plotTimes = []
 for i in range(len(times)):
-    if (times[i].month == currentMonth) and \
-        (times[i].year == currentYear) and \
-        (times[i].day == currentDay):
-            currentData[times[i].day] = datas[i]
+    time = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
+    if time.year != currentYear:
+        currentYear = time.year
+        currentMonth = time.month
 
-# If not the same, then do stuff with the current data then start a new one
-# Modify analyse to handle a single month rather than an entry
+    if time.month == currentMonth:
+        if time.day not in currentData.keys():
+            currentData[time.day] = [statistics.mean([int(x) for x in datas[i].split(',')])]
+        else:
+            currentData[time.day].append(statistics.mean([int(x) for x in datas[i].split(',')]))
+    else:
+        #analyse(str(currentYear)+'-'+str(currentMonth),currentData)
+        date = '20{0:02d}'.format(int(str(currentYear)[2:]))+'-'+'{0:02d}'.format(currentMonth)
+        print(date)
+        plotData.append(analyse(date, currentData))
+        plotTimes.append(datetime.strptime(date,"%Y-%m"))
+        currentMonth = time.month
+        currentData = {}
+        currentData[time.day] = [statistics.mean([int(x) for x in datas[i].split(',')])]
+
+for i in range(7):
+    plt.plot(plotTimes,[x[i] for x in plotData])
+    plt.show()
+
+#Save these plots, title, label, etc
+#Then repeat for month, day
