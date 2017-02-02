@@ -84,12 +84,12 @@ def analyse(entriesList):
 
     return peak, meanCount, maxCount, minCount, error, fit, skew
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAplotData.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/plotData.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         datas[i] = datas[i][:-1]
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAplotTimes.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/plotTimes.txt', 'r') as f:
     times = f.readlines()
     for i in range(len(times)):
         times[i] = times[i][:-1]
