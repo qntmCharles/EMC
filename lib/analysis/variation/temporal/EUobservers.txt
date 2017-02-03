@@ -40,6 +40,7 @@ bpb-r1
 ward
 leonhardt
 rodriguez
+feoktistov
 nipp
 hphk-r2
 obsupice-r5
@@ -64,7 +65,6 @@ lensch
 gonzalez
 swan_g1blo
 vyskov
-nelson4
 blacky
 benitez
 hellenic_rescue_team
@@ -99,16 +99,17 @@ richert
 aav
 hphk
 gansel77252
+igor
 arvidsson
 smith_g7izu
 observatory_vyskov
-sylvianobservatory
-bernard
 university_of_suceava_observatory
+astronomickaexpedice
 gansel49990
 gordon49990
 vanleenhove
 observatoire
+sylvianobservatory
 lucas_49_990
 bruyland
 kay
@@ -117,6 +118,8 @@ zvoleneves-r1
 molne
 morillassanchezea7fzs
 schenker
+ra4lns
+bernard
 vanachteluc
 enric
 bucsi
@@ -126,6 +129,7 @@ verbelen_(on4avf)
 maurice
 seb
 astronomical_society_vidulini
+raydelabreuespinet
 hlohovec_observatory
 bramond
 el_miron_del_cielo
@@ -139,6 +143,7 @@ rigby
 rawlinson
 sutlieff
 hvezdarnavsetin
+rm4hm
 mallardi
 nachodsko-r1
 antonio___oss_astron_gorga_
@@ -166,6 +171,7 @@ josephco_@_dourbes
 maquet_(observatoire_de_lille)
 przemek
 dip_fisica_astronomia
+alfred_krohmal
 ddmtrebic-r1
 neijts
 sternwarte
@@ -188,7 +194,6 @@ haik
 samzun
 ea2nn
 csak
-astronomickaexpedice
 _aav_
 rault_f6agr_1
 shuttleworth

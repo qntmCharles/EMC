@@ -98,45 +98,43 @@ plotTimes = []
 plotData = []
 plotErr = []
 
-for year in range(2000,2017):
-    print(year)
-    for month in range(1,13):
-        print(month)
-        currentData = []
+for day in range(1,32):
+    print(day)
+    currentData = []
 
-        for i in range(len(datas)):
-            currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
-            if (currentDate.year == year) and (currentDate.month == month):
-                currentData.extend([int(x) for x in datas[i].split(',')])
+    for i in range(len(datas)):
+        currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
+        if (currentDate.day == day):
+            currentData.extend([int(x) for x in datas[i].split(',')])
 
-        if len(currentData) != 0:
-            plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
-            plotData.append(statistics.mean(currentData))
-            if len(currentData) > 1:
-                plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
-            else:
-                plotErr.append(1)
+    if len(currentData) != 0:
+        plotTimes.append(day)
+        plotData.append(statistics.mean(currentData))
+        if len(currentData) > 1:
+            plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
+        else:
+            plotErr.append(1)
 
-plt.title('Detection count trend by year & month for European observers')
-plt.xlabel('Year', fontsize=20)
+plt.title('Detection count trend by day for European observers')
+plt.xlabel('Day', fontsize=20)
 plt.ylabel('Mean detection count', fontsize=20)
 plt.errorbar(plotTimes, plotData, yerr= plotErr)
-plt.xlim(datetime(1999,6,1),datetime(2017,6,1))
-plt.savefig('/home/cwp/EMC/plots/variation/temporal/EUyearbymonth.png',dpi=500)
+plt.xlim(0.5,31.5)
+plt.savefig('/home/cwp/EMC/plots/variation/temporal/EUday.png',dpi=500)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/YMplotData.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/DplotData.txt', 'w') as f:
     for item in plotData:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/YMplotTimes.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/DplotTimes.txt', 'w') as f:
     for item in plotTimes:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/YMplotErr.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/eu/DplotErr.txt', 'w') as f:
     for item in plotErr:
         f.write(str(item))
         f.write('\n')

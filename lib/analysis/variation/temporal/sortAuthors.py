@@ -9,7 +9,7 @@ for filename in os.listdir(cwd):
         authors[filename[:-4]] = pickle.load(input)
 
 sortedObservers = []
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/EUobservers.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAobservers.txt', 'r') as f:
     lines = f.readlines()
     for line in lines:
         sortedObservers.append(line.split('\n')[0])
@@ -25,11 +25,11 @@ for name, observer in authors.items():
         if len(observer.locationAttr.keys()) != 0:
             print(name)
             print(observer.locationAttr)
-            choice = raw_input('Add to list of ASIA observers?')
+            choice = raw_input('Add to list of EU observers?')
             if choice == '1':
                 add.append(name)
 print(add)
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAobservers.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/EUobservers.txt', 'w') as f:
     for observer in add:
         f.write(observer)
         f.write('\n')

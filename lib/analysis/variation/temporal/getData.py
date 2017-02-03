@@ -17,6 +17,16 @@ with open('/home/cwp/EMC/lib/analysis/variation/temporal/EUobservers.txt', 'r') 
     for line in lines:
         authors.append(line.split('\n')[0])
 
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/USobservers.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        authors.append(line.split('\n')[0])
+
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/ASIAobservers.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        authors.append(line.split('\n')[0])
+
 count = 0
 for year in sorted(os.listdir(cwd)):
     print('======='+year+'=======')
@@ -65,13 +75,13 @@ for key in keys:
     plotData.append(allData[key])
     plotTimes.append(key)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/EUplotData.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/TESTplotData.txt', 'w') as f:
     for item in plotData:
         f.write(','.join([str(x) for x in item]))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/EUplotTimes.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/TESTplotTimes.txt', 'w') as f:
     for item in plotTimes:
         f.write(str(item)+'\n')
     f.close()
