@@ -11,54 +11,81 @@ from scipy.optimize import leastsq
 from geopy.geocoders import Nominatim
 import scipy.stats as stats
 import pandas
+from dateutil.relativedelta import relativedelta
 
 plt.figure(figsize=(9,7))
-plotType = 'M'
 plotLabels = ['Europe',  'Asia & Australia', 'North America', 'All', 'Located']
+plotTitles = ['European',  'Asian & Australian', 'North American', 'All', 'Located']
 plotSrcs = ['variation/temporal/eu/', 'variation/temporal/asia/', 'variation/temporal/us/', 'variation/temporal/', 'variation/temporal/test/']
 for plot in plotSrcs:
-    finalData = []
-    finalErr = []
-    allTimes = range(1, 13)
-    with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotData.txt', 'r') as f:
-        datas = f.readlines()
-        for i in range(len(datas)):
-            datas[i] = float(datas[i][:-1])
+    for plotType in ['YM', 'DYM', 'NYM']:
+        print(plot, plotType)
+        finalData = []
+        finalErr = []
+        allTimes = []
+        startDate = datetime(2000,1,1,0,0,0)
+        while startDate <= datetime(2016,12,1,0,0,0):
+            allTimes.append(startDate)
+            startDate += relativedelta(months=1)
 
-    with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotTimes.txt', 'r') as f:
-        times = f.readlines()
-        for i in range(len(times)):
-            times[i] = float(times[i][:-1])
+        #allTimes = range(1, 13)
+        with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotData.txt', 'r') as f:
+            datas = f.readlines()
+            for i in range(len(datas)):
+                try:
+                    datas[i] = float(datas[i][:-1])
+                except:
+                    datas[i] = None
 
-    with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotErr.txt', 'r') as f:
-        errs = f.readlines()
-        for i in range(len(errs)):
-            errs[i] = float(errs[i][:-1])
+        with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotTimes.txt', 'r') as f:
+            times = f.readlines()
+            for i in range(len(times)):
+                times[i] = datetime.strptime(times[i][:-1], "%Y-%m-%d %H:%M:%S")
 
-    for i in range(len(allTimes)):
-        if allTimes[i] in times:
-            finalData.append(datas[times.index(allTimes[i])])
-            finalErr.append(errs[times.index(allTimes[i])])
+        with open('/home/cwp/EMC/lib/analysis/'+plot+plotType+'plotErr.txt', 'r') as f:
+            errs = f.readlines()
+            for i in range(len(errs)):
+                try:
+                    errs[i] = float(errs[i][:-1])
+                except:
+                    errs[i] = None
+
+        if plotType == 'YM':
+            for i in range(len(allTimes)):
+                if allTimes[i] in times:
+                    finalData.append(datas[times.index(allTimes[i])])
+                    finalErr.append(errs[times.index(allTimes[i])])
+                else:
+                    finalErr.append(None)
+                    finalData.append(None)
+            finalDataMasked = np.ma.masked_object(finalData, None)
+            finalErrMasked = np.ma.masked_object(finalErr, None)
+            plt.errorbar(allTimes, finalDataMasked, yerr=finalErrMasked, label='All')
         else:
-            finalErr.append(None)
-            finalData.append(None)
+            finalDataMasked = np.ma.masked_object(datas, None)
+            finalErrMasked = np.ma.masked_object(errs, None)
+            print(times, len(times))
+            if plotType == 'DYM':
+                plt.errorbar(times, finalDataMasked, yerr=finalErrMasked, label='Day')
+            else:
+                plt.errorbar(times, finalDataMasked, yerr=finalErrMasked, label='Night')
 
-    #finalData = np.ma.array(finalData)
-    finalDataMasked = np.ma.masked_object(finalData, None)
-    finalErrMasked = np.ma.masked_object(finalErr, None)
-    #finalDataMasked = np.ma.masked_where(finalData is None, finalData)
-    #finalErr = np.ma.array(finalErr)
-    #finalErrMasked = np.ma.masked_where(finalErr is None, finalErr)
 
-    plt.errorbar(allTimes, finalDataMasked, yerr=finalErrMasked, label=plotLabels[plotSrcs.index(plot)])
+        #finalData = np.ma.array(finalData)
+        #finalDataMasked = np.ma.masked_where(finalData is None, finalData)
+        #finalErr = np.ma.array(finalErr)
+        #finalErrMasked = np.ma.masked_where(finalErr is None, finalErr)
+
+        #plt.errorbar(allTimes, finalDataMasked, yerr=finalErrMasked, label=plotLabels[plotSrcs.index(plot)])
     #plt.plot(allTimes,finalDataMasked)
-plt.legend()
-plt.title('Time variation of detection count by month')
-plt.xlabel('Month')
-plt.ylabel('Mean detection count')
-plt.xlim(0.5,12.5)
-plt.ylim(0,120)
-plt.savefig('/home/cwp/EMC/plots/variation/temporal/Mcombined.png',dpi=500)
+    plt.legend()
+    plt.title('Time variation of detection count by year & month for '+plotTitles[plotSrcs.index(plot)]+' observers',y=1.05)
+    plt.xlabel('Year')
+    plt.ylabel('Mean detection count')
+    plt.savefig('/home/cwp/EMC/plots/variation/temporal/'+plotLabels[plotSrcs.index(plot)]+'combined.png',dpi=500)
+    plt.clf()
+    #plt.xlim(0.5,12.5)
+    #plt.ylim(0,120)
 #plt.show()
 
 """

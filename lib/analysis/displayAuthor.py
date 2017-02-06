@@ -5,12 +5,11 @@ from matplotlib import pyplot as plt
 
 authors={}
 
-#Define directories
+# Define directories
 cwd = '/home/cwp/EMC/data/authors/'
 filenames = os.listdir(cwd)
-#print(filenames)
 
-#Load files
+# Load files
 for filename in filenames:
     with open(cwd+filename,'rb') as input:
         #print(filename[:-4])

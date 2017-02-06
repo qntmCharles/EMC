@@ -107,7 +107,8 @@ for year in range(2000,2017):
         for i in range(len(datas)):
             currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
             if (currentDate.year == year) and (currentDate.month == month):
-                currentData.extend([int(x) for x in datas[i].split(',')])
+                if (currentDate.hour <= 18) and (currentDate.hour > 6):
+                    currentData.extend([int(x) for x in datas[i].split(',')])
 
         if len(currentData) != 0:
             plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
@@ -116,27 +117,34 @@ for year in range(2000,2017):
                 plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
             else:
                 plotErr.append(1)
+        else:
+            plotData.append(None)
+            plotErr.append(None)
+            plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
 
-plt.title('Detection count trend by year & month for all selected observers', y=1.05)
+finalData = np.ma.masked_object(plotData, None)
+finalErr = np.ma.masked_object(plotErr, None)
+
+plt.title('Detection count trend by year & month for all selected observers (hours 19-06)', y=1.05)
 plt.xlabel('Year', fontsize=20)
 plt.ylabel('Mean detection count', fontsize=20)
-plt.errorbar(plotTimes, plotData, yerr= plotErr)
+plt.errorbar(plotTimes, finalData, yerr= finalErr)
 plt.xlim(datetime(1999,6,1),datetime(2017,6,1))
-plt.savefig('/home/cwp/EMC/plots/variation/temporal/TESTyearbymonth.png',dpi=500)
+plt.savefig('/home/cwp/EMC/plots/variation/temporal/night_TESTyearbymonth.png',dpi=500)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/YMplotData.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/NYMplotData.txt', 'w') as f:
     for item in plotData:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/YMplotTimes.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/NYMplotTimes.txt', 'w') as f:
     for item in plotTimes:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/YMplotErr.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/test/NYMplotErr.txt', 'w') as f:
     for item in plotErr:
         f.write(str(item))
         f.write('\n')
