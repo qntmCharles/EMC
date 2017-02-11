@@ -48,15 +48,19 @@ count = 0
 for name, observer in authors.items():
     datesList = []
     for date, entry in observer.data.items():
-        if date[-2:] == '10':
-            if (date[:-2]+'11' in observer.data.keys()):# and (date[:-2]+'09' in observer.data.keys()):
-                if name not in selectedObservers.keys():
-                    selectedObservers[name] = [date[:-2]+'10']
-                else:
-                    selectedObservers[name].append(date[:-2]+'10')
+        if ('LatitudeGMAP' in observer.locationAttr.keys()) and (\
+                'LongitudeGMAP' in observer.locationAttr.keys()):
+            if date[-2:] == '05':
+                #if (str(int(date[:-3])-1)+'-12' in observer.data.keys()):# and (date[:-2]+'09' in observer.data.keys()):
+                if date[:-2]+'04' in observer.data.keys():
+                    if name not in selectedObservers.keys():
+                        selectedObservers[name] = [date[:-2]+'04', date[:-2]+'05']
+                    else:
+                        selectedObservers[name].extend([date[:-2]+'04', date[:-2]+'05'])
 
+# Uncomment to save selected observers to file
 for name, dates in selectedObservers.items():
-    with open('/home/cwp/EMC/lib/analysis/zhr/orionids/'+name+'.txt', 'w') as f:
+    with open('/home/cwp/EMC/lib/analysis/zhr/dates/eta_aquariids/'+name+'.txt', 'w') as f:
         for date in dates:
             f.write(date)
             f.write('\n')
