@@ -99,52 +99,55 @@ plotData = []
 plotErr = []
 
 for year in range(2000,2017):
+    """
     print(year)
     for month in range(1,13):
         print(month)
-        currentData = []
+        """
+    currentData = []
 
-        for i in range(len(datas)):
-            currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
-            if (currentDate.year == year) and (currentDate.month == month):
-                if (currentDate.hour > 9) and (currentDate.hour <= 21):
-                    currentData.extend([int(x) for x in datas[i].split(',')])
+    for i in range(len(datas)):
+        currentDate = datetime.strptime(times[i], "%Y-%m-%d %H:%M:%S")
+        if (currentDate.year == year):
+            if (currentDate.hour <= 9) or (currentDate.hour > 21):
+                currentData.extend([int(x) for x in datas[i].split(',')])
 
-        if len(currentData) != 0:
-            plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
-            plotData.append(statistics.mean(currentData))
-            if len(currentData) > 1:
-                plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
-            else:
-                plotErr.append(1)
+    if len(currentData) != 0:
+        plotTimes.append(year)
+        plotData.append(statistics.mean(currentData))
+        if len(currentData) > 1:
+            plotErr.append(statistics.stdev(currentData)/math.sqrt(len(currentData)))
         else:
-            plotData.append(None)
-            plotErr.append(None)
-            plotTimes.append(datetime.strptime(str(year)+'-'+'{0:02d}'.format(month), "%Y-%m"))
+            plotErr.append(1)
+    else:
+        plotData.append(None)
+        plotErr.append(None)
+        plotTimes.append(year)
 
 finalData = np.ma.masked_object(plotData, None)
 finalErr = np.ma.masked_object(plotErr, None)
 
-plt.title('Detection count trend by year & month for Australian & Asian observers (hours 10-21 UTC)', y=1.05)
+plt.title('Detection count trend by year for Australian & Asian observers (hours 22-09 UTC)', y=1.05)
 plt.xlabel('Year', fontsize=20)
 plt.ylabel('Mean detection count', fontsize=20)
 plt.errorbar(plotTimes, finalData, yerr= finalErr)
-plt.xlim(datetime(1999,6,1),datetime(2017,6,1))
-plt.savefig('/home/cwp/EMC/plots/variation/temporal/night_ASIAyearbymonth.png',dpi=500)
+#plt.xlim(datetime(1999,6,1),datetime(2017,6,1))
+plt.xlim(1999.5,2016.5)
+plt.savefig('/home/cwp/EMC/plots/variation/temporal/day_ASIAyear.png',dpi=500)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYMplotData.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotData.txt', 'w') as f:
     for item in plotData:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYMplotTimes.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotTimes.txt', 'w') as f:
     for item in plotTimes:
         f.write(str(item))
         f.write('\n')
     f.close()
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYMplotErr.txt', 'w') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotErr.txt', 'w') as f:
     for item in plotErr:
         f.write(str(item))
         f.write('\n')

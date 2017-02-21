@@ -38,20 +38,25 @@ errsDict = {}
 ind = np.arange(12)
 width=0.35
 
+colors = ['b','r','g']
+ylabs = ["Peak hour", "Detection count", "Detection count", "Detection count", "Standard error", "Sum of parameter covariance", "Skewness"]
 titles = ["Mean peak hour for diurnal shift", "Mean hourly detection count", "Maximum hourly detection count", "Minimum hourly detection count", "Mean standard error in detection count", "Measure of fit to an optimised sine curve", "Skew of daily counts"]
+
+
 for index in range(7):
     fig, ax = plt.subplots(figsize=(12,9))
     for name in names:
         plotDict[name] = [dataList[i][name] for i in range(len(dataList))]
         errsDict[name] = [errsList[i][name] for i in range(len(errsList))]
 
-    rects = ax.bar(ind+width, plotDict[names[index]], width, yerr = errsDict[names[index]], color='b', error_kw=dict(ecolor='k'))
+    rects = ax.bar(ind+width*0.5, plotDict[names[index]], width, yerr = errsDict[names[index]],color='b', error_kw=dict(ecolor='k'))
 
     ax.set_xticks(ind+width)
-    ax.set_xticklabels(antennas, rotation=16)
-    ax.set_title(titles[index]+", averaged for antenna type", y=1.05)#"Mean peak hour of diurnal shift")
+    ax.set_xticklabels(antennas, rotation=16, ha='right')
+    #ax.set_title(titles[index]+", averaged for antenna type", y=1.05)
     ax.set_xlabel("Antenna type", fontsize=20)
-    ax.set_ylabel("Detection count", fontsize=20)
+    ax.set_ylabel(ylabs[index], fontsize=20)
     #plt.show()
     plt.savefig('/home/cwp/EMC/plots/variation/antenna/'+names[index], dpi=500)
     plt.clf()
+#plt.savefig('/home/cwp/EMC/plots/variation/antenna/meanmaxmin.png', dpi=500)

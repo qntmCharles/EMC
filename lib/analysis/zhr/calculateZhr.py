@@ -102,8 +102,10 @@ def baseline(entries, activeRange):
 
     if len(allData) == 0:
         b = 0
+
     elif len(allData) < 4:
         b = min(allData)
+
     else:
         sortedData = sorted(allData)[:len(allData)//4]
         b = sum(sortedData)/len(sortedData)
@@ -126,7 +128,7 @@ def calculateZHR(HR, lat, long, date, RA, dec, r, b):
 
     # Compute radiant altitude correction factor
     hR = d2r(90-math.degrees(z))
-    cc = 0.5+(hR/math.pi)
+    cc = 0.5+(hR/(2*math.pi))
 
     # Compute ZHR
     zhr = (HR-b)/cc

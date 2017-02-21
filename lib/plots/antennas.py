@@ -43,19 +43,24 @@ countsOrdered.reverse()
 print(antennasOrdered)
 print(countsOrdered)
 
+antennae = {'yagi':'Yagi', 'dipole':'Dipole', 'gp':'Ground Plane', 'vertical':'Vertical', 'discone':'Discone', 'turnstile':'Turnstile', 'logperiodic':'Log Periodic', 'fullwaveloop':'Full Wave Loop', 'jpole':'J-Pole', 'diamond':'Diamond', 'quad':'Quadrifilar', 'omni':'Omnidirectional'}
+
+for i in range(len(antennasOrdered)):
+    antennasOrdered[i] = antennae[antennasOrdered[i]]
+
 indices = np.arange(len(antennasOrdered))
 width = 0.6
 fig, ax = plt.subplots()
 rects1 = ax.bar(indices+width, countsOrdered, width, color='b', align='center')
 ax.set_xticks(indices+width)
-ax.set_xticklabels(antennasOrdered, rotation = 45, ha='right')
-fig.suptitle('Locations of observers (where known)', fontsize = 15, fontweight = 'bold')
-ax.set_xlabel('Country', fontsize = 15)
+ax.set_xticklabels(antennasOrdered, rotation = 25, ha='right')
+#plt.title('Antenna usage', y=1.05)
+ax.set_xlabel('Antenna type', fontsize = 15)
 ax.set_ylabel('Number of observers', fontsize = 15)
 
 plt.tight_layout()
 
-plt.show()
+plt.savefig('/home/cwp/EMC/plots/general/antennas.png', dpi=500)
 
 """
     dC, hC = analyseAuthor(authorobj)

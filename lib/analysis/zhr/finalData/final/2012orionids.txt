@@ -1,0 +1,9 @@
+Average of all: 48.5080198819
+Err of all: 0.625911800497
+UQ of all: 119.951772214
+Average of peak: 53.0390186623
+Err of peak: 3.76721665362
+UQ of peak: 129.408657361
+Average of close peak: 54.3540091893
+Err of close peak: 2.13017463823
+UQ of close peak: 147.15312702

@@ -1,6 +1,8 @@
-import os, csv
+from __future__ import division
+import os, csv, math
 import matplotlib.dates as mdates
 import statistics
+from scipy.stats import scoreatpercentile
 import numpy as np
 from matplotlib import pyplot as plt
 from datetime import datetime
@@ -10,6 +12,15 @@ showerObservers = {}
 basedir = '/home/cwp/EMC/lib/analysis/zhr/'
 showers = ['perseids', 'leonids', 'quadrantids', 'geminids', 'orionids', \
         'eta_aquariids']
+
+def per(aList):
+    return scoreatpercentile(aList,90)
+
+def err(aList):
+    if len(aList) > 1:
+        return statistics.stdev(aList)/math.sqrt(len(aList))
+    else:
+        return 1/math.sqrt(len(aList))
 
 def getObservers(filepath):
     base = filepath
@@ -72,36 +83,61 @@ for shower in showers:
 
 
 for shower, observers in showerObservers.items():
-    print(shower)
-
-    allMeans = {}
-    literallyAllData = []
-    allMaxs = {}
+    print('=========='+shower+'==========')
 
     showerData = getShowerInfo(shower+'radiant.txt')
 
+    literallyAllData = {}
+
+    literallyAllPeakData = {}
+
+    literallyAllClosePeakData = {}
+
     for observer, observerDates in observers.items():
-        print(observer)
-        plotData = []
-        plotErr = []
-        plotTimes = []
+        try:
+            print('====='+observer+'=====')
+            plotData = []
+            plotErr = []
+            plotTimes = []
 
-        peakData = []
+            with open(basedir+'data/'+shower+'/'+observer+'.txt', 'r') as f:
+                readFile = list(csv.reader(f))
+                for line in readFile:
+                    dateObject = datetime.strptime(line[0],"%Y-%m-%d %H:%M:%S")
 
-        closePeakData = []
+                    year = dateObject.year
 
-        with open(basedir+'data/'+shower+'/'+observer+'.txt', 'r') as f:
-            readFile = list(csv.reader(f))
-            for line in readFile:
-                dateObject = datetime.strptime(line[0],"%Y-%m-%d %H:%M:%S")
+                    if shower != 'quadrantids':
+                        activeRange = getHourDateRange(showerData[year]['start'],\
+                                showerData[year]['end'], year, year)
+                    else:
+                        activeRange = getHourDateRange(showerData[year]['start'],\
+                                showerData[year]['end'], year, year+1)
 
-                year = dateObject.year
+                    if dateObject in activeRange:
+                        if float(line[1]) > 0:
+                            plotData.append(float(line[1]))
+                            plotErr.append(float(line[2]))
+                            plotTimes.append(dateObject)
 
-                peakDates = getHourDateRange(showerData[year]['peak'], \
-                        showerData[year]['peak'],year,year)
+            # Find all years for observer
+            observerYears = []
+            for item in plotTimes:
+                year = item.year
+                if year not in observerYears:
+                    observerYears.append(year)
 
-                closePeakDates = getClosePeakRange(showerData[year]['peak'], \
-                        year)
+            # Iterate through years to process data for each single year
+            for year in sorted(observerYears):
+                finalData = []
+                finalTimes = []
+                finalErr = []
+
+                meanList = []
+
+                peakData = []
+
+                closePeakData = []
 
                 if shower != 'quadrantids':
                     activeRange = getHourDateRange(showerData[year]['start'],\
@@ -110,82 +146,116 @@ for shower, observers in showerObservers.items():
                     activeRange = getHourDateRange(showerData[year]['start'],\
                             showerData[year]['end'], year, year+1)
 
-                if dateObject in activeRange:
-                    if float(line[1]) > 0:
-                        plotData.append(float(line[1]))
-                        plotErr.append(float(line[2]))
-                        plotTimes.append(dateObject)
+                peakDates = getHourDateRange(showerData[year]['peak'], \
+                        showerData[year]['peak'],year,year)
 
-                if dateObject in peakDates:
-                    if float(line[1]) > 0:
-                        peakData.append(float(line[1]))
+                closePeakDates = getClosePeakRange(showerData[year]['peak'], \
+                        year)
 
-                if dateObject in closePeakDates:
+                for selectedDate in activeRange:
+                    if selectedDate in plotTimes:
+                        meanList.append(plotData[plotTimes.index(selectedDate)])
+                        if year not in literallyAllData.keys():
+                            literallyAllData[year] = [plotData[plotTimes.index(selectedDate)]]
+                        else:
+                            literallyAllData[year].append(plotData[plotTimes.index(selectedDate)])
+                        finalTimes.append(selectedDate)
+                        finalData.append(plotData[plotTimes.index(selectedDate)])
+                        finalErr.append(plotErr[plotTimes.index(selectedDate)])
+                    else:
+                        finalTimes.append(selectedDate)
+                        finalData.append(None)
+                        finalErr.append(None)
 
-        observerYears = []
-        for item in plotTimes:
-            year = item.year
-            if year not in observerYears:
-                observerYears.append(year)
+                for selectedDate in peakDates:
+                    if selectedDate in plotTimes:
+                        peakData.append(plotData[plotTimes.index(selectedDate)])
+                        if year not in literallyAllPeakData.keys():
+                            literallyAllPeakData[year] = [plotData[plotTimes.index(selectedDate)]]
+                        else:
+                            literallyAllPeakData[year].append(plotData[plotTimes.index(selectedDate)])
 
-        print(observerYears)
-        finalData = []
-        finalTimes = []
-        finalErr = []
-        for year in sorted(observerYears):
-            meanList = []
+                for selectedDate in closePeakDates:
+                    if selectedDate in plotTimes:
+                        closePeakData.append(plotData[plotTimes.index(selectedDate)])
+                        if year not in literallyAllClosePeakData.keys():
+                            literallyAllClosePeakData[year] = [plotData[plotTimes.index(selectedDate)]]
+                        else:
+                            literallyAllClosePeakData[year].append(plotData[plotTimes.index(selectedDate)])
 
-            if shower != 'quadrantids':
-                activeRange = getHourDateRange(showerData[year]['start'],\
-                        showerData[year]['end'], year, year)
-            else:
-                activeRange = getHourDateRange(showerData[year]['start'],\
-                        showerData[year]['end'], year, year+1)
+                average = statistics.mean(meanList)
+                per_ = per(meanList)
+                err_ = err(meanList)
+                print('Year: ',year, '| Average: ',average,' | Err: ',err_,'| UQ: ',per_)
 
-            for selectedDate in activeRange:
-                if selectedDate in plotTimes:
-                    meanList.append(plotData[plotTimes.index(selectedDate)])
-                    literallyAllData.append(plotData[plotTimes.index(selectedDate)])
-                    finalTimes.append(selectedDate)
-                    finalData.append(plotData[plotTimes.index(selectedDate)])
-                    finalErr.append(plotErr[plotTimes.index(selectedDate)])
-                else:
-                    finalTimes.append(selectedDate)
-                    finalData.append(None)
-                    finalErr.append(None)
+                # Save statistics for whole year to file
+                with open('/home/cwp/EMC/lib/analysis/zhr/finalData/allData/'+shower+'/'+observer+'.txt', 'a') as f:
+                    f.write(str(year)+','+str(average)+','+str(err_)+','+str(per_))
+                    f.write('\n')
 
-            average = statistics.mean(meanList)
-            max_ = max(meanList)
+                # Save statistics for peak to file
+                with open('/home/cwp/EMC/lib/analysis/zhr/finalData/peakData/'+shower+'/'+observer+'.txt', 'a') as f:
+                    if len(peakData) > 0:
+                        print('Mean of peak: ',str(statistics.mean(peakData)))
+                        print('Err of peak: ',str(err(peakData)))
+                        print('UQ of peak: ',str(per(peakData)))
+                        f.write(str(year)+','+str(statistics.mean(peakData))+','+str(err(peakData))+','+str(per(peakData)))
+                        f.write('\n')
 
-            print('Year: ',year, '| Average: ',average,'| Max: ',max_)
+                # Save statistics for close to peak to file
+                with open('/home/cwp/EMC/lib/analysis/zhr/finalData/closePeakData/'+shower+'/'+observer+'.txt', 'a') as f:
+                    if len(closePeakData) > 0:
+                        print('Mean of close to peak: ',str(statistics.mean(closePeakData)))
+                        print('Err of close to peak: ',str(err(closePeakData)))
+                        print('UQ of close to peak: ',str(per(closePeakData)))
+                        f.write(str(year)+','+str(statistics.mean(closePeakData))+','+str(err(closePeakData))+','+str(per(closePeakData)))
+                        f.write('\n')
 
-            with open('/home/cwp/EMC/lib/analysis/zhr/finalData/allData/'+shower+'/'+observer+'.txt', 'a') as f:
-                f.write(str(year)+','+str(average)+','+str(max_))
+
+                # Mask data
+                finalErrMasked = np.ma.masked_object(finalErr, None)
+                finalDataMasked = np.ma.masked_object(finalData, None)
+
+                """
+                # Make plot and save
+                fig, ax = plt.subplots(figsize=(15,9))
+                plt.title('Observer: '+observer+' | Year: '+str(year)+' | Shower: '+shower, y=1.05, fontsize=20)
+                xfmt = mdates.DateFormatter('%d/%m %H:%M')
+                ax.xaxis.set_major_formatter(xfmt)
+                plt.ylabel('Zenithal Hourly Rate',fontsize=18)
+                plt.xlabel('Date',fontsize=18)
+                plt.tick_params(labelsize=15)
+                plt.errorbar(finalTimes, finalDataMasked, yerr=finalErrMasked)
+                fig.autofmt_xdate()
+                plt.savefig('/home/cwp/EMC/plots/zhr/'+shower+'/'+observer+str(year)+'.png', dpi=500)
+                plt.close(fig)
+                """
+
+        except Exception as e:
+            print(e)
+
+    # Save statistics for all observers in shower to file
+    for year in sorted(literallyAllData.keys()):
+        with open('/home/cwp/EMC/lib/analysis/zhr/finalData/final/'+str(year)+shower+'.txt', 'w') as f:
+            f.write('Average of all: '+str(statistics.mean(literallyAllData[year])))
+            f.write('\n')
+            f.write('Err of all: '+str(err(literallyAllData[year])))
+            f.write('\n')
+            f.write('UQ of all: '+str(per(literallyAllData[year])))
+            f.write('\n')
+
+            if year in literallyAllPeakData.keys():
+                f.write('Average of peak: '+str(statistics.mean(literallyAllPeakData[year])))
+                f.write('\n')
+                f.write('Err of peak: '+str(err(literallyAllPeakData[year])))
+                f.write('\n')
+                f.write('UQ of peak: '+str(per(literallyAllPeakData[year])))
                 f.write('\n')
 
-            if year not in allMeans.keys():
-                allMeans[year] = [average]
-                allMaxs[year] = [max_]
-            else:
-                allMeans[year].append(average)
-                allMaxs[year].append(max_)
-
-            finalErrMasked = np.ma.masked_object(finalErr, None)
-            finalDataMasked = np.ma.masked_object(finalData, None)
-
-            fig, ax = plt.subplots(figsize=(15,9))
-            plt.title('Observer: '+observer+' | Year: '+str(year)+' | Shower: '+shower, y=1.05, fontsize=20)
-            xfmt = mdates.DateFormatter('%d/%m %H:%M')
-            ax.xaxis.set_major_formatter(xfmt)
-            plt.ylabel('Zenithal Hourly Rate',fontsize=18)
-            plt.xlabel('Date',fontsize=18)
-            plt.tick_params(labelsize=15)
-            plt.errorbar(finalTimes, finalDataMasked, yerr=finalErrMasked)
-            plt.savefig('/home/cwp/EMC/plots/zhr/'+shower+'/'+observer+str(year)+'.png', dpi=500)
-            plt.clf()
-
-    with open('/home/cwp/EMC/lib/analysis/zhr/finalData/final/'+shower+'.txt', 'w') as f:
-        f.write('Average: '+str(statistics.mean(literallyAllData)))
-        f.write('Maximum: '+str(max(literallyAllData)))
-        f.write('Average average: '+str(statistics.mean(allMeans)))
-        f.write('Average maximum: '+str(statistics.mean(allMaxs)))
+            if year in literallyAllClosePeakData.keys():
+                f.write('Average of close peak: '+str(statistics.mean(literallyAllClosePeakData[year])))
+                f.write('\n')
+                f.write('Err of close peak: '+str(err(literallyAllClosePeakData[year])))
+                f.write('\n')
+                f.write('UQ of close peak: '+str(per(literallyAllClosePeakData[year])))
+                f.write('\n')
