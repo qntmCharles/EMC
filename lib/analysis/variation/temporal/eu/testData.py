@@ -11,7 +11,7 @@ finalNightData = []
 finalDayTimes = []
 finalNightTimes = []
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotData.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/DYplotData.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         try:
@@ -19,12 +19,12 @@ with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotData.txt', '
         except:
             dayData.append(None)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/DYplotTimes.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/DYplotTimes.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         dayTimes.append(float(datas[i]))
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYplotData.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/NYplotData.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         try:
@@ -32,12 +32,13 @@ with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYplotData.txt', '
         except:
             nightData.append(None)
 
-with open('/home/cwp/EMC/lib/analysis/variation/temporal/asia/NYplotTimes.txt', 'r') as f:
+with open('/home/cwp/EMC/lib/analysis/variation/temporal/NYplotTimes.txt', 'r') as f:
     datas = f.readlines()
     for i in range(len(datas)):
         nightTimes.append(float(datas[i]))
 
 
+count = 0
 for i in range(len(dayTimes)):
     time = dayTimes[i]
     if (dayData[i] is not None) and (nightData[i] is not None):
@@ -45,6 +46,9 @@ for i in range(len(dayTimes)):
         finalDayTimes.append(dayTimes[i])
         finalNightData.append(float(nightData[i]))
         finalNightTimes.append(nightTimes[i])
+        count += 1
+print(count)
+raw_input()
 
 maskedNightData = np.ma.masked_object(nightData, None)
 maskedDayData = np.ma.masked_object(dayData, None)

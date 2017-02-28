@@ -2,14 +2,15 @@ from matplotlib import pyplot as plt
 from datetime import datetime, timedelta
 import numpy as np
 def getdata(filepath):
+    print(filepath)
     a=[]
-    year = filepath[24:28]
+    year = filepath[-12:-8]
     month = open(filepath,'r').readline().rstrip().split("|")[0]
     for  line in open(filepath,'r'):
         p = line.rstrip().split('|') #get rid of newlines, whitespace, and split into hour segments from 00h to 23h
-        q=[] 
+        q=[]
         for i in p:
-            q.append(i[1:]) #get rid of whitespace 
+            q.append(i[1:]) #get rid of whitespace
         a.append(q[:-1]) #get rid of ''
     a = a[1:-17] #remove dates and guff at end
     return a,month,year
@@ -21,7 +22,8 @@ def plotmonth(month):
     ydata=[]
     ydatanew=[]
     xdata=[]
-    filepath = 'E:\\Colorgramme Lab\\rmob\\2015\\Lockyer_Observatory_'+month+'2015rmob.txt' 
+    #filepath = 'E:\\Colorgramme Lab\\rmob\\2015\\Lockyer_Observatory_'+month+'2015rmob.txt'
+    filepath = '/home/cwp/rmob/2015/Lockyer_Observatory_'+month+'2015rmob.txt'
     data,month,year = getdata(filepath)
     count=0
     for line in data:
@@ -51,7 +53,7 @@ for i in months:
     newydata,runningmeanydata,newxdata = plotmonth(i)
     ydata.append(newydata)
     run_mean.append(runningmeanydata)
-    xdata.append(newxdata)    
+    xdata.append(newxdata)
 plt.plot(xdata,ydata,'b',alpha=0.5)
 plt.plot(xdata,run_mean,'r')
 plt.show()
