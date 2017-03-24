@@ -39,11 +39,11 @@ ind = np.arange(12)
 width=0.35
 
 colors = ['b','r','g']
-ylabs = ["Peak hour", "Detection count", "Detection count", "Detection count", "Standard error", "Sum of parameter covariance", "Skewness"]
+ylabs = ["Peak hour", "Detection count", "Detection count", "Detection count", "Standard error", "Sum of parameter standard deviation", "Skewness"]
 titles = ["Mean peak hour for diurnal shift", "Mean hourly detection count", "Maximum hourly detection count", "Minimum hourly detection count", "Mean standard error in detection count", "Measure of fit to an optimised sine curve", "Skew of daily counts"]
 
 
-for index in range(7):
+for index in range(5,6):
     fig, ax = plt.subplots(figsize=(12,9))
     for name in names:
         plotDict[name] = [dataList[i][name] for i in range(len(dataList))]

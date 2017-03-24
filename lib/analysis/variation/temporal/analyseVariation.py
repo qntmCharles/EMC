@@ -97,7 +97,7 @@ while startDate <= datetime(2016,12,1):
     startDate += relativedelta(months=1)
 stuff = {'/variation/temporal/US':'North America','/variation/temporal/EU':'Europe','/variation/temporal/ASIA':'Asia & Australia','':'All'}
 
-for k in range(7):
+for k in range(5,6):
     for location in ['/variation/temporal/US','/variation/temporal/EU','/variation/temporal/ASIA','']:
 
         with open('/home/cwp/EMC/lib/analysis/'+location+'plotData.txt', 'r') as f:
@@ -150,7 +150,7 @@ for k in range(7):
                 'Time variation of standard error in detection counts for all observers',
                 'Time variation of sine-wave diurnal shift fit for all observers',
                 'Time variation of skew in daily detections for all observers']
-        ylabels=['Hour', 'Detection count', 'Detection count', 'Detection count', 'Standard error', 'Sum of parameter covariance', 'Skewness']
+        ylabels=['Hour', 'Detection count', 'Detection count', 'Detection count', 'Standard error', 'Sum of parameter standard deviation', 'Skewness']
         filenames = ['peak', 'mean', 'max', 'min', 'err', 'fit', 'skew']
 
         finalData = []

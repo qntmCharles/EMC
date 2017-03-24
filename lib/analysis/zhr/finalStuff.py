@@ -54,6 +54,7 @@ for shower in showers:
 
             for i in range(len(lines)):
                 print(lines[i])
+
         except:
             pass
 
