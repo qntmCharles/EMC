@@ -150,6 +150,7 @@ for k in range(5,6):
                 'Time variation of standard error in detection counts for all observers',
                 'Time variation of sine-wave diurnal shift fit for all observers',
                 'Time variation of skew in daily detections for all observers']
+
         ylabels=['Hour', 'Detection count', 'Detection count', 'Detection count', 'Standard error', 'Sum of parameter standard deviation', 'Skewness']
         filenames = ['peak', 'mean', 'max', 'min', 'err', 'fit', 'skew']
 

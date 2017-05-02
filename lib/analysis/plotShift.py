@@ -10,6 +10,13 @@ import scipy.optimize
 from scipy.optimize import leastsq
 sources = ['','variation/temporal/EU','variation/temporal/ASIA','variation/temporal/US']
 labels = ['All', 'Europe', 'Asia & Aus.', 'North America']
+
+plt.title("Mean diurnal shift across each observer location category")
+plt.ylabel("Average detection count")
+plt.xlabel("Time from midnight (hours)")
+plt.subplots_adjust(top=0.93,bottom=0.12)
+plt.xlim((0,24))
+
 for src in sources:
     plotTimes = range(0,24)
     plotData = [[] for i in range(0,24)]
@@ -44,11 +51,6 @@ for src in sources:
     plotData = np.array(plotData)
     plotTimes = np.array(plotTimes)
 
-    plt.title("Mean diurnal shift across each observer location category")
-    plt.ylabel("Average detection count")
-    plt.xlabel("Time from midnight (hours)")
-    plt.subplots_adjust(top=0.93,bottom=0.12)
-    plt.xlim((0,24))
     np.append(plotTimes, 24)
     plotTimes = np.append(plotTimes, 24)
     plotData = np.insert(plotData, 0, plotData[-1])
@@ -95,4 +97,5 @@ for src in sources:
     #plt.savefig('/home/cwp/EMC/plots/general/diurnal_shift_fit.png')
 
 plt.legend()
-plt.savefig('/home/cwp/EMC/plots/general/all_diurnal_shifts.png',dpi=500)
+plt.show()
+#plt.savefig('/home/cwp/EMC/plots/general/all_diurnal_shifts.png',dpi=500)

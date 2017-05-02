@@ -72,6 +72,41 @@ def dateRange(start,end):
 
     return dates
 
+def makePairs(rmob, mse):
+    pairs = []
+
+    for date in rmob:
+        if date in mse:
+            pairs.append(date)
+
+    return pairs
+
+
+def numPairs(dates, rmob, mse):
+    pairs = 0
+    for date in dates:
+        if (date in mse) and (date in rmob):
+            pairs += 1
+
+    return pairs
+
+def nextDate(date):
+    return date + dt.timedelta(hours=1)
+
+allPairs = makePairs(rmobTimes, finalMseTimes)
+
+start = allPairs[0]
+i = 0
+while i < len(allPairs):
+    if nextDate(allPairs[i]) in allPairs:
+        i += 1
+    else:
+        num = numPairs(dateRange(start, allPairs[i]), rmobTimes, finalMseTimes)
+        print("Pairs from %s to %s: %s" % (start, allPairs[i], num))
+        if i < len(allPairs)-1:
+           start = allPairs[i+1]
+        i += 1
+
 badTimes = []
 badTimes.extend(dateRange(datetime(2016,7,1,0),datetime(2016,7,9,23)))
 badTimes.extend(dateRange(datetime(2016,8,13,11),datetime(2016,8,22,23)))
@@ -91,6 +126,8 @@ for time in finalMseTimes:
         if time not in badTimes:
             x.append(rmobData[rmobTimes.index(time)])
             y.append(finalMseData[finalMseTimes.index(time)])
+
+print(len(x))
 
 """
 plotTimes = []
@@ -123,5 +160,5 @@ plt.savefig('/home/cwp/EMC/plots/img/before.png',dpi=500)
 plt.savefig('/home/cwp/ltx/report/images/img/before.png',dpi=500)
 """
 
-print(np.corrcoef(x,y))
-print(stats.pearsonr(x,y))
+#print(np.corrcoef(x,y))
+#print(stats.pearsonr(x,y))
