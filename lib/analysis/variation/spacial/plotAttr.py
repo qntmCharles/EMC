@@ -100,7 +100,7 @@ for i in range(len(finalY)):
 ref = [6 for k in range(-150,151)]
 plt.plot(range(-150,151), ref, 'g')
 #plt.errorbar(finalX,finalY, yerr=err)
-plt.errorbar(finalX, finalY, yerr=err)
+plt.errorbar(finalX, finalY, yerr=err, capsize=4, color="b")
 #plt.scatter(finalX, finalY)
 #plt.scatter(finalX, finalY)
 plt.ylim(0,24)
@@ -112,8 +112,9 @@ plt.ylabel(ylabels[0])
 #plt.ylabel(ylabels[k-2])
 #plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/'+filenames[k-2]+'.png')
 plt.tight_layout()
-plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/corrected_peak_better.png',dpi=500)
-plt.show()
+#plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/corrected_peak_better.png',dpi=500)
+plt.savefig('/home/cwp/ltx/papers/dishift2/final/figures/corrected.pdf')
+#plt.show()
 """
 
 plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/skew.png')

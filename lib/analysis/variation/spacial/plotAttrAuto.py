@@ -10,7 +10,7 @@ titles=['Peak hour of diurnal shift, averaged for grouped longitudes',\
         'Variation in hourly detection counts, averaged for grouped longitudes',\
         'Sine-wave diurnal shift fit, averaged for grouped longitudes']
 
-for k in range(7,8):
+for k in [2]:
     hist = {}
     data = []
     longs = []
@@ -26,7 +26,7 @@ for k in range(7,8):
 
     for i in range(len(longs)):
         if len(longs[i]) != 0:
-            if (longs[i][-1] == 'E') or (longs[i][-1] == 'W'):
+            if (longs[i][-1] == 'W') or (longs[i][-1] == 'E'):
                 longs[i] = longs[i][:-1]
 
             try:
@@ -79,7 +79,7 @@ for k in range(7,8):
             long = [x[i]]
             start = x[i]
 
-    plt.errorbar(finalX,finalY, yerr=err)
+    plt.errorbar(finalX,finalY, yerr=err, color="b", capsize=4)
     #print(titles[k-2])
     #plt.title(titles[k-2])
     #plt.title('Daily count skewness, averaged for grouped longitudes')
@@ -87,7 +87,8 @@ for k in range(7,8):
     plt.ylabel(ylabels[k-2])
     #plt.ylabel(ylabels[k-2])
     plt.tight_layout()
-    plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/'+filenames[k-2]+'.png')
+    #plt.show()
+    plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/'+filenames[k-2]+'.pdf')
     plt.clf()
     #plt.show()
     #plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/skew.png')

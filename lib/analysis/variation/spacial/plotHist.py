@@ -71,10 +71,12 @@ for i in range(len(x)):
 binss = [0 for i in range(24)]
 count = 0
 
-plt.hist(finalY, bins=range(24))
+plt.hist(finalY, bins=range(24), color="b", edgecolor="k")
 plt.xlabel("Peak hour")
 plt.ylabel("Number of observers")
-plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/histogram.png',dpi=500)
+#plt.savefig('/home/cwp/EMC/plots/variation/spacial/longitude/histogram.pdf')
+plt.tight_layout()
+plt.savefig('/home/cwp/ltx/papers/dishift2/final/figures/hist.pdf')
 
 """
 peaks = [y[0]]
