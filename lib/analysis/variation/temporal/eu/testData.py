@@ -47,17 +47,18 @@ for i in range(len(dayTimes)):
         finalNightData.append(float(nightData[i]))
         finalNightTimes.append(nightTimes[i])
         count += 1
-print(count)
-raw_input()
 
 maskedNightData = np.ma.masked_object(nightData, None)
 maskedDayData = np.ma.masked_object(dayData, None)
 
-plt.plot(nightTimes,maskedNightData)
-plt.plot(dayTimes,maskedDayData)
-plt.show()
+print(scipy.stats.skew(maskedNightData), scipy.stats.skew(maskedDayData))
+
+#plt.plot(nightTimes,maskedNightData)
+#plt.plot(dayTimes,maskedDayData)
+#plt.show()
 
 #print(1-scipy.stats.chi2.cdf(scipy.stats.chisquare(finalDayData).statistic,len(finalDayData)-1))
 #print(1-scipy.stats.chi2.cdf(scipy.stats.chisquare(finalNightData).statistic,len(finalNightData)-1))
-print(scipy.stats.ttest_ind(finalDayData, finalNightData))
-print(scipy.stats.wilcoxon(finalDayData, finalNightData))
+
+#print(scipy.stats.ttest_ind(finalDayData, finalNightData))
+#print(scipy.stats.wilcoxon(finalDayData, finalNightData))
